@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  caddy:
+    environment:
+      CERAMIC_DOMAIN: "${CERAMIC_DOMAIN}"
+    ports:
+      - "0.0.0.0:80:80"
+      - "0.0.0.0:443:443"
+      - "0.0.0.0:4012:4012"
+    volumes:
+      - "/var/lib/docker-compose/Caddyfile.production:/etc/caddy/Caddyfile:ro"
+
+  ipfs-daemon:
+    environment:
+      CERAMIC_NETWORK: elp
+
+  ceramic-js:
+    volumes:
+      # configuration schema can be found at:
+      # https://github.com/ceramicnetwork/js-ceramic/blob/develop/packages/cli/src/daemon-config.ts
+      - "/var/lib/docker-compose/js-ceramic.daemon.config.production.json:/root/.ceramic/daemon.config.json:ro"

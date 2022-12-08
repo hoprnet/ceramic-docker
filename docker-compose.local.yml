@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  caddy:
+    ports:
+      - "127.0.0.1:7007:7007"
+    volumes:
+      - "./Caddyfile.local:/etc/caddy/Caddyfile:ro"
+
+  ipfs-daemon:
+    environment:
+      CERAMIC_NETWORK: testnet-clay
+
+  ceramic-js:
+    volumes:
+      # configuration schema can be found at:
+      # https://github.com/ceramicnetwork/js-ceramic/blob/develop/packages/cli/src/daemon-config.ts
+      - "./js-ceramic.daemon.config.local.json:/root/.ceramic/daemon.config.json:ro"

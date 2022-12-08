@@ -1,0 +1,51 @@
+version: '3.8'
+
+volumes:
+  ipfs-data:
+  ceramic-logs:
+  ceramic-state:
+  # directory for TLS certs and other permanent files used by caddy
+  caddy-data:
+  # directory for caddy configuration
+  caddy-config:
+
+services:
+  caddy:
+    image: caddy:alpine
+    restart: unless-stopped
+    volumes:
+      - caddy-data:/data
+      - caddy-config:/config
+    depends_on:
+      - ipfs-daemon
+      - ceramic-js
+
+  ipfs-daemon:
+    image: ceramicnetwork/ipfs-daemon:latest
+    restart: unless-stopped
+    ports:
+      - "4011" # swarm websockets
+      - "4012" # swarm secure websockets
+      - "5011" # API
+      - "8011" # healtheck
+      - "9011" # gateway
+    environment:
+      # refer to source for configuration options:
+      # https://github.com/ceramicnetwork/js-ceramic/blob/develop/packages/ipfs-daemon/src/ipfs-daemon.ts
+      IPFS_PATH: "/root/.ipfs"
+      IPFS_ENABLE_API: "true"
+      IPFS_ENABLE_GATEWAY: "true"
+      HEALTHCHECK_ENABLED: "true"
+    volumes:
+      - "ipfs-data:/root/.ipfs"
+
+  ceramic-js:
+    image: ceramicnetwork/js-ceramic:latest
+    restart: unless-stopped
+    depends_on:
+      - ipfs-daemon
+    ports:
+      - "7007"
+    volumes:
+      - "ceramic-logs:/root/.ceramic/logs"
+      - "ceramic-state:/root/.ceramic/statestore"

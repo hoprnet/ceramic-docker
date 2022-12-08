@@ -1,0 +1,26 @@
+{
+  "anchor": {
+    "ethereum-rpc-url": "TODO"
+  },
+  "http-api": {
+    "cors-allowed-origins": [
+      ".*"
+    ]
+  },
+  "ipfs": {
+    "mode": "remote",
+    "host": "http://ipfs-daemon:5011"
+  },
+  "logger": {
+    "log-level": 2,
+    "log-to-files": true
+  },
+  "network": {
+    "name": "testnet-clay"
+  },
+  "node": {},
+  "state-store": {
+    "mode": "fs",
+    "local-directory": "$HOME/.ceramic/statestore"
+  }
+}

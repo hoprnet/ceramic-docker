@@ -1,0 +1,11 @@
+{
+	debug off
+}
+
+http://localhost:7007 {
+	reverse_proxy ceramic-js:7007
+}
+
+http://localhost:8011 {
+	reverse_proxy ipfs-daemon:8011
+}

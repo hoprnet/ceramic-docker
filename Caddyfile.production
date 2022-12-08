@@ -1,0 +1,29 @@
+{
+	email tech@hoprnet.org
+}
+
+{$CERAMIC_DOMAIN} {
+	encode gzip zstd
+
+	# enable using uptimerobot http check
+	rewrite / /api/v0/node/healthcheck
+
+	reverse_proxy ceramic-js:7007
+}
+
+ipfs-{$CERAMIC_DOMAIN} {
+	encode gzip zstd
+
+	reverse_proxy ipfs-daemon:8011
+}
+
+https://{$CERAMIC_DOMAIN}:4012 {
+	encode gzip zstd
+
+	@websockets {
+		header Connection *Upgrade*
+		header Upgrade websocket
+	}
+
+	reverse_proxy @websockets ipfs-daemon:4012
+}
